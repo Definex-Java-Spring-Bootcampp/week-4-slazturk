@@ -10,10 +10,10 @@ public class Application {
     private Loan loan;
     private Product product;
     private User user;
-    private LocalDateTime localDateTime;
+    private LocalDateTime createDate;
     private ApplicationStatus applicationStatus;
 
-    private Application() {
+    public Application() {
     }
 
     /*
@@ -24,17 +24,17 @@ public class Application {
         this.applicationStatus = ApplicationStatus.INITIAL;
     }*/
 
-    public Application(Product product, User user, LocalDateTime localDateTime) {
+    public Application(Product product, User user, LocalDateTime createDate) {
         this.product = product;
         this.user = user;
-        this.localDateTime = localDateTime;
+        this.createDate = createDate;
         this.applicationStatus = ApplicationStatus.INITIAL;
     }
 
-    public Application(Loan loan, User user, LocalDateTime localDateTime) {
+    public Application(Loan loan, User user, LocalDateTime createDate) {
         this.loan = loan;
         this.user = user;
-        this.localDateTime = localDateTime;
+        this.createDate = createDate;
         this.applicationStatus = ApplicationStatus.INITIAL;
     }
 
@@ -54,12 +54,12 @@ public class Application {
         this.user = user;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 
-    public void setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public void setLocalDateTime(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 
     public ApplicationStatus getApplicationStatus() {
@@ -75,7 +75,7 @@ public class Application {
         return "Application{" +
                 "loan=" + loan +
                 ", user=" + user +
-                ", localDateTime=" + localDateTime +
+                ", createDate=" + createDate +
                 ", applicationStatus=" + applicationStatus +
                 '}';
     }

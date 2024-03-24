@@ -1,8 +1,13 @@
 package com.patika.kredinbizdeservice.service;
 
+import com.patika.kredinbizdeservice.exceptions.ExceptionMessages;
+import com.patika.kredinbizdeservice.exceptions.KredinbizdeException;
 import com.patika.kredinbizdeservice.model.User;
+import com.patika.kredinbizdeservice.producer.NotificationProducer;
+import com.patika.kredinbizdeservice.producer.dto.NotificationDTO;
+import com.patika.kredinbizdeservice.producer.enums.NotificationType;
 import com.patika.kredinbizdeservice.repository.UserRepository;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -10,44 +15,61 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class UserService implements IUserService {
+@Scope(value = "singleton")
+@RequiredArgsConstructor
+public class UserService {
 
     private UserRepository userRepository = new UserRepository();
 
-    @Override
+    private final NotificationProducer notificationProducer;
+
     public User save(User user) {
         System.out.println("userRepository: " + userRepository.hashCode());
 
         userRepository.save(user);
 
+        notificationProducer.sendNotification(prepareNotificationDTO(NotificationType.EMAIL, user.getEmail()));
+
         return user;
     }
 
-    @Override
+    private NotificationDTO prepareNotificationDTO(NotificationType notificationType, String email) {
+        return NotificationDTO.builder()
+                .message("user kaydedildi.")
+                .notificationType(notificationType)
+                .email(email)
+                .build();
+    }
+
+
     public List<User> getAll() {
         System.out.println("userRepository: " + userRepository.hashCode());
         return userRepository.getAll();
     }
 
-    @Override
+
     public User getByEmail(String email) {
 
         Optional<User> foundUser = userRepository.findByEmail(email);
 
-        User user = null;
-
-        //User user = foundUser.orElseThrow(RuntimeException::new);
+        User user = foundUser.orElseThrow(() -> new KredinbizdeException(ExceptionMessages.USER_NOT_FOUND));
 
         if (foundUser.isPresent()) {
             user = foundUser.get();
         }
 
-        return user;
+        //throw new RuntimeException();
+
+        // throw new NullPointerException();
+
+         throw new IllegalArgumentException("exception fırlatıldı");
+
+        // throw new ArithmeticException();
+
+       // return user;
 
     }
 
-    @Override
     public User update(String email, User user) {
 
         Optional<User> foundUser = userRepository.findByEmail(email);
@@ -61,5 +83,9 @@ public class UserService implements IUserService {
         userRepository.save(foundUser.get());
 
         return foundUser.get();
+    }
+
+    public User getById(Long userId) {
+        return userRepository.findByUserId(userId);
     }
 }

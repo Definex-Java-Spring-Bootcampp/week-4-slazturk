@@ -27,4 +27,8 @@ public class UserRepository {
     public void delete(User user) {
         userList.remove(user);
     }
+
+    public User findByUserId(Long userId) {
+        return new User();
+    }
 }

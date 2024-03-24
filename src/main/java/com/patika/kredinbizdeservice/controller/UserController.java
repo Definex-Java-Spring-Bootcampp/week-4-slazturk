@@ -1,27 +1,23 @@
 package com.patika.kredinbizdeservice.controller;
 
 import com.patika.kredinbizdeservice.model.User;
-import com.patika.kredinbizdeservice.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.patika.kredinbizdeservice.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
+    /* @Autowired*/
+    private final UserService userService;
 
-    @Autowired
-    public UserController(IUserService userService) {
-        this.userService = userService;
-    }
-
-    // create user
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
@@ -29,9 +25,6 @@ public class UserController {
         return userService.save(user);
     }
 
-    /*
-    get all users
-     */
     @GetMapping
     public List<User> getAll() {
         return userService.getAll();
