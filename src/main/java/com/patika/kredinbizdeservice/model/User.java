@@ -1,9 +1,13 @@
 package com.patika.kredinbizdeservice.model;
 
+import lombok.ToString;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class User {
+@ToString
+public class User implements Serializable {
 
     private String name;
     private String surname;
@@ -12,7 +16,7 @@ public class User {
     private String password; //hash fonskiyonlarından biri ile hashlanecek.
     private String phoneNumber;
     private Boolean isActive;
-    private List<Application> applicationList;
+    //private List<Application> applicationList;
 
     public User() {
     }
@@ -91,12 +95,12 @@ public class User {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-*/
+
     public List<Application> getApplicationList() {
         return applicationList;
     }
 
     public void setApplicationList(List<Application> applicationList) {
         this.applicationList = applicationList;
-    }
+    }*/
 }

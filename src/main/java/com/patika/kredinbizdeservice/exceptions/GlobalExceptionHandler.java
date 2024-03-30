@@ -20,14 +20,14 @@ public class GlobalExceptionHandler {
                 .body(prepareExceptionResponse(exception, HttpStatus.NOT_FOUND));
     }
 
-    @ExceptionHandler(Exception.class)
+  /*  @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleAllException(Exception exception) {
         log.error("exception occurred. {0}", exception.getCause());
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(prepareExceptionResponse(exception, HttpStatus.BAD_REQUEST));
-    }
+    }*/
 
     private ExceptionResponse prepareExceptionResponse(Exception exception, HttpStatus httpStatus) {
         return ExceptionResponse.builder()

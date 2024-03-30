@@ -3,9 +3,10 @@ package com.patika.kredinbizdeservice.model;
 
 import com.patika.kredinbizdeservice.enums.ApplicationStatus;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Application {
+public class Application implements Serializable {
 
     private Loan loan;
     private Product product;

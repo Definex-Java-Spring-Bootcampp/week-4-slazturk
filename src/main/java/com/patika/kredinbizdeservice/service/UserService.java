@@ -8,6 +8,10 @@ import com.patika.kredinbizdeservice.producer.dto.NotificationDTO;
 import com.patika.kredinbizdeservice.producer.enums.NotificationType;
 import com.patika.kredinbizdeservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +21,14 @@ import java.util.Optional;
 @Service
 @Scope(value = "singleton")
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private UserRepository userRepository = new UserRepository();
 
     private final NotificationProducer notificationProducer;
 
+    @CacheEvict(value = "users", allEntries = true)
     public User save(User user) {
         System.out.println("userRepository: " + userRepository.hashCode());
 
@@ -41,14 +47,16 @@ public class UserService {
                 .build();
     }
 
-
+    //@Cacheable(value = "users")
     public List<User> getAll() {
         System.out.println("userRepository: " + userRepository.hashCode());
         return userRepository.getAll();
     }
 
-
+    @Cacheable(value = "users", key = "#email")
     public User getByEmail(String email) {
+
+        log.info("user db'den alındı.");
 
         Optional<User> foundUser = userRepository.findByEmail(email);
 
@@ -62,14 +70,15 @@ public class UserService {
 
         // throw new NullPointerException();
 
-         throw new IllegalArgumentException("exception fırlatıldı");
+        // throw new IllegalArgumentException("exception fırlatıldı");
 
         // throw new ArithmeticException();
 
-       // return user;
+        return user;
 
     }
 
+    @CachePut(value = "users", key = "#email")
     public User update(String email, User user) {
 
         Optional<User> foundUser = userRepository.findByEmail(email);
