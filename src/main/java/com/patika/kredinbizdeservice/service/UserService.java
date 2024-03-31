@@ -8,6 +8,7 @@ import com.patika.kredinbizdeservice.producer.NotificationProducer;
 import com.patika.kredinbizdeservice.producer.dto.NotificationDTO;
 import com.patika.kredinbizdeservice.producer.enums.NotificationType;
 import com.patika.kredinbizdeservice.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,7 +30,8 @@ public class UserService {
 
     private final NotificationProducer notificationProducer;
 
-    @CacheEvict(value = "users", allEntries = true)
+    //@CacheEvict(value = "users", allEntries = true)
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = KredinbizdeException.class)
     public User save(User user) {
 
         user.setAddress(getAddress());
