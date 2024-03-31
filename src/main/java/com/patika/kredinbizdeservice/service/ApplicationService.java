@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ApplicationService {
 
-    private final ApplicationRepository applicationRepository = new ApplicationRepository();
+    private final ApplicationRepository applicationRepository;
     private final ApplicationConverter applicationConverter;
     private final UserService userService;
     private final AkbankServiceClient akbankServiceClient;
@@ -32,6 +32,8 @@ public class ApplicationService {
         Application savedApplication = applicationRepository.save(application);
 
         ApplicationResponse akbankApplicationResponse = akbankServiceClient.createApplication(prepareAkbankApplicationRequest(user));
+
+        // TODO akbankApplicationResponse response kontrol edilmeli.
 
         return savedApplication;
     }

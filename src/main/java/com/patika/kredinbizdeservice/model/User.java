@@ -1,35 +1,69 @@
 package com.patika.kredinbizdeservice.model;
 
-import jakarta.persistence.Entity;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.patika.kredinbizdeservice.model.constant.UserEntityColumnConstants;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-@ToString
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User extends Audit implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String surname;
-    private LocalDate birthDate;
-    private String email; //bir email ile bir kere kayıt olunabilir.
-    private String password; //hash fonskiyonlarından biri ile hashlanecek.
-    private String phoneNumber;
-    private Boolean isActive;
-    //private List<Application> applicationList;
 
+    @Column(name = UserEntityColumnConstants.NAME, unique = false, nullable = false)
+    private String name;
+
+    @Column(name = UserEntityColumnConstants.SURNAME, unique = false, nullable = false)
+    private String surname;
+
+    @Column(name = UserEntityColumnConstants.BIRTH_DATE, nullable = true)
+    private LocalDate birthDate;
+
+    @Column(name = UserEntityColumnConstants.EMAIL, unique = true, nullable = false)
+    private String email;
+
+    @Column(name = UserEntityColumnConstants.PASSWORD, unique = false, nullable = false)
+    private String password;
+
+    @Column(name = UserEntityColumnConstants.PHONE_NUMBER, unique = false, nullable = true)
+    private String phoneNumber;
+
+    @Column(name = UserEntityColumnConstants.IS_ACTIVE, unique = false, nullable = true)
+    private Boolean isActive;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = UserEntityColumnConstants.ADDRESS, nullable = true, unique = false)
+    private Address address;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Application> applicationList;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthDate=" + birthDate +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", isActive=" + isActive +
+                ", applicationList=" + applicationList +
+                '}';
+    }
 }

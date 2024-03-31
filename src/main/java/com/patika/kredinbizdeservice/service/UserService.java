@@ -2,6 +2,7 @@ package com.patika.kredinbizdeservice.service;
 
 import com.patika.kredinbizdeservice.exceptions.ExceptionMessages;
 import com.patika.kredinbizdeservice.exceptions.KredinbizdeException;
+import com.patika.kredinbizdeservice.model.Address;
 import com.patika.kredinbizdeservice.model.User;
 import com.patika.kredinbizdeservice.producer.NotificationProducer;
 import com.patika.kredinbizdeservice.producer.dto.NotificationDTO;
@@ -24,19 +25,28 @@ import java.util.Optional;
 @Slf4j
 public class UserService {
 
-    private UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository;
 
     private final NotificationProducer notificationProducer;
 
     @CacheEvict(value = "users", allEntries = true)
     public User save(User user) {
-        System.out.println("userRepository: " + userRepository.hashCode());
+
+        user.setAddress(getAddress());
 
         userRepository.save(user);
 
         notificationProducer.sendNotification(prepareNotificationDTO(NotificationType.EMAIL, user.getEmail()));
 
         return user;
+    }
+
+    private Address getAddress() {
+        Address address = new Address();
+        address.setAddressTitle("Ev");
+        address.setAddressDescription("istanbul, istanbul istanbul");
+        address.setProvince("istanbul");
+        return address;
     }
 
     private NotificationDTO prepareNotificationDTO(NotificationType notificationType, String email) {
@@ -50,7 +60,7 @@ public class UserService {
     //@Cacheable(value = "users")
     public List<User> getAll() {
         System.out.println("userRepository: " + userRepository.hashCode());
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 
     @Cacheable(value = "users", key = "#email")
@@ -95,6 +105,6 @@ public class UserService {
     }
 
     public User getById(Long userId) {
-        return userRepository.findByUserId(userId);
+        return userRepository.findById(userId).get();
     }
 }
