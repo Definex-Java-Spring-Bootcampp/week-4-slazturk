@@ -11,7 +11,6 @@ import com.patika.kredinbizdeservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
@@ -33,14 +32,14 @@ public class UserService {
     //@CacheEvict(value = "users", allEntries = true)
     @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = KredinbizdeException.class)
     public User save(User user) {
-
+        System.out.println(user.hashCode());
         user.setAddress(getAddress());
-
-        userRepository.save(user);
+        user.setIsActive(true);
+        User savedUser = userRepository.save(user);
 
         notificationProducer.sendNotification(prepareNotificationDTO(NotificationType.EMAIL, user.getEmail()));
 
-        return user;
+        return savedUser;
     }
 
     private Address getAddress() {
@@ -78,16 +77,7 @@ public class UserService {
             user = foundUser.get();
         }
 
-        //throw new RuntimeException();
-
-        // throw new NullPointerException();
-
-        // throw new IllegalArgumentException("exception fırlatıldı");
-
-        // throw new ArithmeticException();
-
         return user;
-
     }
 
     @CachePut(value = "users", key = "#email")
