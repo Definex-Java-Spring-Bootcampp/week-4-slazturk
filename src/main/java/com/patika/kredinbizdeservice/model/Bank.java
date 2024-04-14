@@ -25,7 +25,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "application")
+@Table(name = "bank")
 
 public class Bank {
 
@@ -36,9 +36,9 @@ public class Bank {
 	@Column(name = BankEntityColumnConstants.NAME, unique = false, nullable = false)
     private String name;
 	
-	@OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
     private List<Loan> loanList;
 	
-	@OneToMany(mappedBy = "credit", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
     private List<CreditCard> creditCards;
 }
