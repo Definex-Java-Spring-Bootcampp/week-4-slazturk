@@ -2,29 +2,31 @@ package com.patika.kredinbizdeservice.model;
 
 
 import com.patika.kredinbizdeservice.enums.LoanType;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-@ToString
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "consumer_loan")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class ConsumerLoan extends Loan {
-    @Enumerated(EnumType.STRING)
-    private LoanType loanType = LoanType.IHTIYAC_KREDISI;
 
-    @ElementCollection
-    @CollectionTable(name = "installment_options", joinColumns = @JoinColumn(name = "consumer_loan_id"))
-    @Column(name = "installment_option")
+    private LoanType loanType = LoanType.IHTIYAC_KREDISI;
     private List<Integer> installmentOptions;
+
+    public ConsumerLoan() {
+
+    }
+
+    public ConsumerLoan(BigDecimal amount, Integer installment, Double interestRate) {
+        super(amount, installment, interestRate);
+    }
+
+    public LoanType getLoanType() {
+        return loanType;
+    }
+
+    @Override
+    void calculate(BigDecimal amount, int installment) {
+        //tc bul, maaşı bul
+    }
+
+
 }
